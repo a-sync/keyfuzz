@@ -17,7 +17,7 @@
 # Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
 
 noinst_DATA = README.html README
-EXTRA_DIST = $(noinst_DATA) style.css README.html.in NEWDRIVERS 
+EXTRA_DIST = $(noinst_DATA) style.css README.html.in
 
 MAINTAINERCLEANFILES = README README.html
 CLEANFILES =
