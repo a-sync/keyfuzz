@@ -1,0 +1,13 @@
+### keyfuzz file for the Medion 9580F special keys
+
+# Mail
+0x67	155
+
+# World Wide Web
+0x63	150
+
+# Program #1
+0x66	148
+
+# Program #2
+0x69	149

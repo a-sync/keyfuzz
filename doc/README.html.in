@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="iso-8859-1"?> <!-- -*-html-helper-*- -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>keyfuzz @PACKAGE_VERSION@</title>
+<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+
+<body>
+<h1><a name="top">keyfuzz @PACKAGE_VERSION@</a></h1>
+
+<p><i>Copyright 2004 Lennart Poettering &lt;@PACKAGE_BUGREPORT@&gt;</i></p>
+
+<ul class="toc">
+    <li><a href="#license">License</a></li>
+    <li><a href="#news">News</a></li>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#status">Status</a></li>
+    <li><a href="#documentation">Documentation</a></li>
+    <li><a href="#requirements">Requirements</a></li>
+    <li><a href="#installation">Installation</a></li>
+    <li><a href="#acks">Acknowledgements</a></li>
+    <li><a href="#download">Download</a></li>
+</ul>
+
+<h2><a name="license">License</a></h2>
+
+<p>This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the
+License, or (at your option) any later version.</p>
+
+<p>This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+General Public License for more details.</p>
+
+<p>You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.</p>
+
+<h2><a name="news">News</a></h2>
+
+<div class="news-date">Sun Jan 25 2004: </div>
+
+<p class="news-text"><a href="@PACKAGE_URL@keyfuzz-0.1.tar.gz">Version 0.1</a> released, initial release.</b></p>
+
+<h2><a name="overview">Overview</a></h2>
+
+<p>You may use <tt>keyfuzz</tt> to manipulate the scancode/keycode
+translation tables of keyboard drivers supporting the Linux input
+layer API (as included in Linux 2.6). This is useful for fixing the
+translation tables of multimedia keyboards or laptop keyboards with
+special keys. <tt>keyfuzz</tt> is not a daemon like Gnome
+<tt>acme</tt> which reacts on special hotkeys but a tool to make
+non-standard keyboards compatible with such daemons. <tt>keyfuzz</tt>
+should be run once at boot time, the modifications it makes stay
+active after the tool quits until reboot. <tt>keyfuzz</tt> does not interact
+directly with XFree86. However, newer releases of the latter (4.1 and
+above) rely on the Linux input API, so they take advantage of the
+fixed translation tables.</p>
+
+<p>The distribution includes a scancode table for the Medion 9580F
+laptop, which maps the four special keys to XFree86 compatible
+keycodes.</p>
+
+<h2><a name="status">Status</a></h2>
+
+<p>Version @PACKAGE_VERSION@ is more or less stable and feature complete.</p>
+  
+<h2><a name="documentation">Documentation</a></h2>
+
+<p>Have a look on the man page <a href="@PACKAGE_URL@keyfuzz.8.xml"><tt>keyfuzz(8)</tt></a>. (An XSLT capable browser is required)</p>
+
+<p>Scancode tables assign scancodes to keycodes. If you don't now what
+scancodes or keycodes are, read about it in the relevant HOWTOs or FAQs
+available from the <a href="http://www.tldp.org/">Linux
+Documentation Project</a>.</p>
+
+<p>The primary target of <tt>keyfuzz</tt> is to patch scancode/keycode
+definitions for special multimedia keys into the current scancode
+table of a device. An example for such a patch table is the following
+file <tt>medion_9580f.keyfuzz</tt>, which is relevant for the Medion
+9580F laptop which has four special multimedia keys:</p>
+
+<pre># Mail
+0x67	155
+
+# World Wide Web
+0x63	150
+
+# Program #1
+0x66	148
+
+# Program #2
+0x69	149
+</pre>
+
+<p>Activate this file with the following command:</p>
+
+<pre>keyfuzz -s < medion_9580f.keyfuzz</pre>
+
+<p>This assigns the scancode <tt>0x67</tt> to the keycode <tt>155</tt>
+and so on. For a list of available keycodes have look on the
+<tt>KEY_xxx</tt> constant definitions in <tt>/usr/include/linux/input.h</tt>. The
+scancodes are keyboard specific. You may use the (console specific)
+utility <tt>showkey(1)</tt> to examine the scancode/keycode of a
+key. Another way to get the scancodes of special keys is to look for
+kernel debug messages like these if you press the relevant keys:</p>
+
+<pre>atkbd.c: Unknown key pressed (translated set 2, code 0x66 on isa0060/serio0).
+atkbd.c: Unknown key released (translated set 2, code 0x66 on isa0060/serio0).</pre>
+
+<p>Feel free to to send me patch tables for your hardware. I'll add them to my to distribution.</p>
+
+<p>The <tt>keyfuzz</tt> distribution includes a SysV init script which
+runs <tt>keyfuzz -s</tt> for all configured input devices depending on
+files or symbolics links named after the devices in
+<tt>/etc/keyfuzz</tt>. If you want to use this script, just create a symlink
+<tt>/etc/keyfuzz/event0</tt> to a scancode table file
+(e.g. <tt>/etc/keyfuzz/medion_9580f.keyfuzz</tt>). The scancode
+table of the device <tt>/dev/input/event0</tt> is modified according
+to the contents of that file on each boot:</p>
+
+<pre>cd /etc/keyfuzz
+ln -s medion_9580f.keyfuzz event0</pre>
+
+<p>The virtual file <tt>/proc/bus/input/devices</tt> lists all available input devices.</p>
+
+<h2><a name="requirements">Requirements</a></h2>
+
+<p><tt>keyfuzz</tt> requires a kernel supporting the Linux input layer, such as 2.6.1.</p>
+
+<h2><a name="installation">Installation</a></h2>
+
+<p>As this package is made with the GNU <tt>autotools</tt> you should run
+<tt>./configure</tt> inside the distribution directory for configuring
+the source tree. After that you should run <tt>make</tt> for
+compilation and <tt>make install</tt> (as root) for installation of
+<tt>keyfuzz</tt>.</p>
+
+<h2><a name="acks">Acknowledgements</a></h2>
+
+<p>None so far</p>
+
+<h2><a name="download">Download</a></h2>
+
+<p>The newest release is always available from <a href="@PACKAGE_URL@">@PACKAGE_URL@</a></p>
+
+<p>The current release is <a href="@PACKAGE_URL@keyfuzz-@PACKAGE_VERSION@.tar.gz">@PACKAGE_VERSION@</a></p>
+
+<p>Get <tt>keyfuzz</tt>'s development sources from the <a href="http://subversion.tigris.org/">Subversion</a> <a href="https://seth.intheinter.net:8081/svn/keyfuzz/">repository</a>.</p>
+
+<p>If you want to be notified whenever I release a new version of this software use the subscription feature of <a href="http://freshmeat.net/projects/keyfuzz/">Freshmeat</a>.</p>
+
+<hr/>
+<address class="grey">Lennart Poettering &lt;@PACKAGE_BUGREPORT@&gt;, January 2004</address>
+
+<div class="grey"><i>$Id$</i></div>
+
+</body>
+</html>

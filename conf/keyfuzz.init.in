@@ -1,0 +1,49 @@
+#!/bin/bash
+# $Id$
+
+# This file is part of keyfuzz.
+#
+# keyfuzz is free software; you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free
+# Software Foundation; either version 2 of the License, or (at your
+# option) any later version.
+#
+# keyfuzz is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+# for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with keyfuzz; if not, write to the Free Software Foundation,
+# Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
+
+KEYFUZZ="@sbindir@/keyfuzz"
+test -x "$KEYFUZZ" || exit 0
+
+if [ `id -u` != "0" ] && [ "$1" = "start" -o "$1" = "stop" ] ; then
+  echo "You must be root to runkeyfuzz."
+  exit 1
+fi
+
+case "$1" in
+    start|reload|force-reload|restart)
+        echo -n "Loading input layer scancode tables: "
+        cd "@pkgsysconfdir@"
+        for E in event? ; do 
+            if test -r "$E" ; then
+                "$KEYFUZZ" -s -d "$E" < "$E"
+                echo -n "$E "
+            fi
+        done
+        echo
+        ;;
+
+    stop)
+        ;;
+
+    *)
+        echo "Usage: $0 {start|stop|restart|reload|force-reload}"
+        exit 1
+esac
+
+exit 0

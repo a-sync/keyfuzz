@@ -1,0 +1,7 @@
+purpose "Linux input layer scancode remapper"
+
+option "set" s "Set/merge the maping table" flag off
+option "get" g "Get the key mapping table" flag off
+option "info" i "Show driver information" flag off
+option "device" d "Specify the device to use" string no
+option "verbose" v "Enable verbose mode" flag off
