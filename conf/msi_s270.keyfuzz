@@ -1,0 +1,31 @@
+### keyfuzz file for the MSI S270 special keys
+
+# Volume DOWN
+0xAE 114
+
+# Volume UP
+0xB0 115
+
+# MUTE
+0xA0 113
+
+# Mail
+0xEC 155
+
+# WWW
+0xB2 150
+
+# WLAN
+0xF6 218
+
+# Search
+0xF9 217
+
+# Brightness up
+0xF8 225
+
+# Brightness down
+0xF7 224
+
+# Suspend
+0xDF 205
