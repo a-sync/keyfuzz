@@ -1,6 +1,13 @@
+keyfuzz (0.2-2) unstable; urgency=low
+
+  * Add plug/unplug keys for MSI S270
+
+ -- Lennart Poettering <mzqrovna@0pointer.net>  Tue, 14 Feb 2006 22:23:25 +0100
+
 keyfuzz (0.2-1) unstable; urgency=low
 
   * Initial Release.
 
  -- Lennart Poettering <mzqrovna@0pointer.net>  Tue, 14 Feb 2006 03:21:24 +0100
+
 
