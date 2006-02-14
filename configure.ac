@@ -20,7 +20,7 @@
 # Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
 
 AC_PREREQ(2.59)
-AC_INIT([keyfuzz],[0.1],[mzxrlshmm (at) 0pointer (dot) de])
+AC_INIT([keyfuzz],[0.2],[mzxrlshmm (at) 0pointer (dot) de])
 AC_CONFIG_SRCDIR([src/keyfuzz.c])
 AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE([foreign -Wall])
