@@ -28,10 +28,10 @@ README:
 	cd $(srcdir) && ln -s doc/README README
 
 homepage:
-	test -d $$HOME/homepage/lennart
-	mkdir -p $$HOME/homepage/lennart/projects/keyfuzz
-	cp keyfuzz-@PACKAGE_VERSION@.tar.gz man/keyfuzz.8.xml man/xmltoman.css man/xmltoman.xsl man/xmltoman.dtd doc/style.css doc/README.html $$HOME/homepage/lennart/projects/keyfuzz
-	ln -sf README.html $$HOME/homepage/lennart/projects/keyfuzz/index.html
+	test -d $$HOME/homepage/private
+	mkdir -p $$HOME/homepage/private/projects/keyfuzz
+	cp keyfuzz-@PACKAGE_VERSION@.tar.gz man/keyfuzz.8.xml man/xmltoman.css man/xmltoman.xsl man/xmltoman.dtd doc/style.css doc/README.html $$HOME/homepage/private/projects/keyfuzz
+	ln -sf README.html $$HOME/homepage/private/projects/keyfuzz/index.html
 
 distcleancheck:
 	@
