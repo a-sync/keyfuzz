@@ -33,4 +33,7 @@ homepage:
 	cp keyfuzz-@PACKAGE_VERSION@.tar.gz man/keyfuzz.8.xml man/xmltoman.css man/xmltoman.xsl man/xmltoman.dtd doc/style.css doc/README.html $$HOME/homepage/lennart/projects/keyfuzz
 	ln -sf README.html $$HOME/homepage/lennart/projects/keyfuzz/index.html
 
+distcleancheck:
+	@
+
 .PHONY: homepage distcleancheck
