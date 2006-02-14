@@ -1,0 +1,11 @@
+This package was debianized by Lennart Poettering <mzqrovna@0pointer.net>.
+
+It was downloaded from http://0pointer.de/lennart/projects/keyfuzz/
+
+Upstream Author: Lennart Poettering
+
+Copyright:
+
+You are free to distribute this software under the terms of the GNU General
+Public License. On Debian systems, the complete text of the GNU General Public
+License can be found in the file `/usr/share/common-licenses/GPL'.
