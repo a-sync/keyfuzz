@@ -23,7 +23,7 @@ AC_PREREQ(2.59)
 AC_INIT([keyfuzz],[0.2],[mzxrlshmm (at) 0pointer (dot) de])
 AC_CONFIG_SRCDIR([src/keyfuzz.c])
 AC_CONFIG_HEADERS([config.h])
-AM_INIT_AUTOMAKE([foreign -Wall])
+AM_INIT_AUTOMAKE([foreign 1.9 -Wall])
 
 AC_SUBST(PACKAGE_URL, [http://0pointer.de/lennart/projects/keyfuzz/])
 
@@ -39,7 +39,7 @@ AC_PROG_MAKE_SET
 
 # If using GCC specifiy some additional parameters
 if test "x$GCC" = "xyes" ; then
-   CFLAGS="$CFLAGS -pipe -Wall"
+   CFLAGS="$CFLAGS -pipe -Wall -W -pedantic"
 fi
 
 # Checks for header files.

@@ -30,11 +30,7 @@ README:
 homepage:
 	test -d $$HOME/homepage/lennart
 	mkdir -p $$HOME/homepage/lennart/projects/keyfuzz
-	cp *.tar.gz $$HOME/homepage/lennart/projects/keyfuzz
-	cp man/keyfuzz.8.xml man/xmltoman.css man/xmltoman.xsl man/xmltoman.dtd doc/style.css doc/README.html $$HOME/homepage/lennart/projects/keyfuzz
-	cp $$HOME/homepage/lennart/projects/keyfuzz/README.html $$HOME/homepage/lennart/projects/keyfuzz/index.html
-
-distcleancheck:
-	@:
+	cp keyfuzz-@PACKAGE_VERSION@.tar.gz man/keyfuzz.8.xml man/xmltoman.css man/xmltoman.xsl man/xmltoman.dtd doc/style.css doc/README.html $$HOME/homepage/lennart/projects/keyfuzz
+	ln -sf README.html $$HOME/homepage/lennart/projects/keyfuzz/index.html
 
 .PHONY: homepage distcleancheck

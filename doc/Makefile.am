@@ -30,7 +30,7 @@ CLEANFILES += README
 endif
 
 tidy: README.html
-	tidy -e < README.html
+	tidy -qe < README.html ; true
 
 .PHONY: tidy
 
