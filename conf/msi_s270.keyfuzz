@@ -29,3 +29,9 @@
 
 # Suspend
 0xDF 142
+
+# Power cable Plug
+0xF1 193
+
+# Power cable Unplug
+0xF2 194
