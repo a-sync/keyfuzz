@@ -5,13 +5,18 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
-#include <linux/input.h>
+#include <glob.h>
 
+#include "input.h"
 #include "cmdline.h"
+
+#include "keys-from-name.h"
+#include "keys-to-name.h"
 
 #define MAX_SCANCODES 1024
 
 static struct gengetopt_args_info args;
+
 
 int evdev_open(const char *dev) {
     int fd;
@@ -131,7 +136,10 @@ int dump_table(int fd) {
             break;
         }
 
-        printf("0x%03x\t0x%03x\n", scancode, keycode);
+        if (keycode < KEY_MAX && key_names[keycode])
+            printf("0x%03x\t%s\n", scancode, key_names[keycode]);
+        else
+            printf("0x%03x\t0x%03x\n", scancode, keycode);
     }
 
     if (!r)
@@ -142,7 +150,7 @@ fail:
 }
 
 int merge_table(int fd) {
-    int r = -1;
+    int r = 0;
     int line = 0;
     
     while (!feof(stdin)) {
@@ -160,24 +168,128 @@ int merge_table(int fd) {
             continue;
 
         if (sscanf(p, "%i %i", &scancode, &new_keycode) != 2) {
-            fprintf(stderr, "Parse failure at line %i\n", line);
-            goto fail;
+            char t[20];
+            const struct key *k;
+            
+            if (sscanf(p, "%i %20s", &scancode, t) != 2) {
+                fprintf(stderr, "WARNING: Parse failure at line %i, ignoring.\n", line);
+                r = -1;
+                continue;
+            }
+
+            if (!(k = lookup_key(t, strlen(t)))) {
+                fprintf(stderr, "WARNING: Unknown key '%s' at line %i, ignoring.\n", t, line);
+                r = -1;
+                continue;
+            }
+
+            new_keycode = k->id;
         }
 
-        if ((old_keycode = evdev_get_keycode(fd, scancode, 0)) < 0)
-            goto fail;
         
-        if (evdev_set_keycode(fd, scancode, new_keycode) < 0) 
-            goto fail; 
+        
+        if ((old_keycode = evdev_get_keycode(fd, scancode, 0)) < 0) {
+            r = -1;
+            goto fail;
+        }
+        
+        if (evdev_set_keycode(fd, scancode, new_keycode) < 0) {
+            r = -1;
+            goto fail;
+        }
         
         if (args.verbose_flag && new_keycode != old_keycode)
             fprintf(stderr, "Remapped scancode 0x%02x to 0x%02x. (prior: 0x%02x)\n", scancode, new_keycode, old_keycode);
     }
 
-    r = 0;
-
 fail:
 
+    return r;
+}
+
+static char *find_atkbd_sysfs(void) {
+    glob_t globbuf;
+    char **p;
+    int ret;
+    char *r = NULL;
+
+    if ((ret = glob("/sys/class/input/event*", GLOB_ERR, NULL, &globbuf))) {
+        fprintf(stderr, "Warning! Failed to access sysfs: %s\n",
+                ret == GLOB_NOSPACE ? strerror(ENOMEM) :
+                (ret == GLOB_ABORTED ? strerror(errno) :
+                 (ret == GLOB_NOMATCH ? strerror(ENOENT) : "Unknown error")));
+        return NULL;
+    }
+
+    for (p = globbuf.gl_pathv; *p; p++) {
+        FILE *f;
+        static char fn[PATH_MAX];
+        char ln[16];
+
+        snprintf(fn, sizeof(fn), "%s/device/description", *p);
+
+        if (!(f = fopen(fn, "r")))
+            continue;
+        
+        if (fgets(ln, sizeof(ln), f)) {
+
+            if (strcmp(ln, "i8042 KBD port\n") == 0) {
+                (fn+17)[strcspn(fn+17, "/")] = 0;
+                r = strdup(fn + 17);
+                fclose(f);
+                goto finish;
+            }
+        }
+
+        fclose(f);
+    }
+
+finish:
+    globfree(&globbuf);
+    return r;
+}
+
+static char *find_atkbd_procfs(void) {
+    FILE *f;
+    char *r = NULL;
+    int found = 0;
+
+    if (!(f = fopen("/proc/bus/input/devices", "r"))) {
+        fprintf(stderr, "Warning! Failed to access procfs: %s\n", strerror(errno));
+        return NULL;
+    }
+
+    while (!feof(f)) {
+        char ln[128];
+
+        if (!(fgets(ln, sizeof(ln), f)))
+            break;
+
+        if (!found) {
+        
+            if (strcmp(ln, "N: Name=\"AT Translated Set 2 keyboard\"\n") == 0)
+                found = 1;
+            
+        } else {
+
+            if (strncmp(ln, "H: Handlers=", 12) == 0) {
+                char *e;
+
+                if ((e = strstr(ln+12, "event"))) {                    
+                    e[strcspn(e, " \n\t")] = 0;
+                    r = strdup(e);
+                    goto finish;
+                }
+            }
+
+            if (strcmp(ln, "\n") == 0)
+                found = 0;
+        }
+            
+    }
+
+finish:
+    fclose(f);
     return r;
 }
 
@@ -190,8 +302,17 @@ int main(int argc, char *argv[]) {
         cmdline_parser_print_help();
         goto fail;
     }
+
+    if (!args.device_arg) 
+        args.device_arg = find_atkbd_sysfs(); 
+
+    if (!args.device_arg)
+        args.device_arg = find_atkbd_procfs();
     
-    if ((fd = evdev_open(args.device_arg ? args.device_arg : "event0")) < 0)
+    if (!args.device_arg)
+        args.device_arg  = "event0";
+    
+    if ((fd = evdev_open(args.device_arg)) < 0)
         goto fail;
 
     if (args.get_flag) {
