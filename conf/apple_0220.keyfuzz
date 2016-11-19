@@ -1,8 +1,8 @@
 # move to: /etc/keyfuzz/by-id/usb-Apple__Inc_Apple_Keyboard-event-kbd
 
 # Map F13 to SYSRQ
-458856 KEY_SYSRQ
+0x70068 KEY_SYSRQ
 # Map F14 to Scroll Lock
-458857 KEY_SCROLLLOCK
+0x70069 KEY_SCROLLLOCK
 # Map F15 to Pause
-458858 KEY_PAUSE
+0x7006A KEY_PAUSE
