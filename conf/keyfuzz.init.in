@@ -38,6 +38,14 @@ case "$1" in
             fi
         done
 
+        for D in by-id/* ; do
+            if test -r "$D" ; then
+                "$KEYFUZZ" -s -d /dev/input/"$D" < "$D"
+            echo -n "$D "
+            none=0
+            fi
+        done
+
         if [ "$none" -eq 1 ] ; then
             echo -n "not configured"
         fi
