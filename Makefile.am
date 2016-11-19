@@ -1,4 +1,4 @@
-# $Id$
+# $Id: Makefile.am 15 2006-02-14 16:30:09Z lennart $
 
 # This file is part of keyfuzz.
 #

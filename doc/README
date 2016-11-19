@@ -1,0 +1,181 @@
+
+                                  keyfuzz 0.2
+
+   Copyright 2004-2006 Lennart Poettering <mzxrlshmm (at) 0pointer (dot)
+   de>
+     * [1]License
+     * [2]News
+     * [3]Overview
+     * [4]Status
+     * [5]Documentation
+     * [6]Requirements
+     * [7]Installation
+     * [8]Acknowledgements
+     * [9]Download
+
+License
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or (at
+   your option) any later version.
+
+   This program is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+   General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+News
+
+   Tue Jan 14 2006:
+
+   [10]Version 0.2 released, include one more keyfuzz definition file.
+
+   Sun Jan 25 2004:
+
+   [11]Version 0.1 released, initial release.
+
+Overview
+
+   You may use keyfuzz to manipulate the scancode/keycode translation
+   tables of keyboard drivers supporting the Linux input layer API (as
+   included in Linux 2.6). This is useful for fixing the translation
+   tables of multimedia keyboards or laptop keyboards with special keys.
+   keyfuzz is not a daemon like Gnome acme which reacts on special
+   hotkeys but a tool to make non-standard keyboards compatible with such
+   daemons. keyfuzz should be run once at boot time, the modifications it
+   makes stay active after the tool quits until reboot. keyfuzz does not
+   interact directly with XFree86. However, newer releases of the latter
+   (4.1 and above) rely on the Linux input API, so they take advantage of
+   the fixed translation tables.
+
+   The distribution includes scancode tables for [12]Medion 9580F and
+   [13]MSI S270 laptops. Feel free to send me scancodes table, I will
+   integrate them into my package!
+
+Current Status
+
+   Version 0.2 is more or less stable and feature complete.
+
+Documentation
+
+   Have a look on the man page [14]keyfuzz(8). (An XSLT capable browser
+   is required)
+
+   Scancode tables assign scancodes to keycodes. If you don't now what
+   scancodes or keycodes are, read about it in the relevant HOWTOs or
+   FAQs available from the [15]Linux Documentation Project.
+
+   The primary target of keyfuzz is to patch scancode/keycode definitions
+   for special multimedia keys into the current scancode table of a
+   device. An example for such a patch table is the following file
+   medion_9580f.keyfuzz, which is relevant for the Medion 9580F laptop
+   which has four special multimedia keys:
+# Mail
+0x67    155
+
+# World Wide Web
+0x63    150
+
+# Program #1
+0x66    148
+
+# Program #2
+0x69    149
+
+   Activate this file with the following command:
+keyfuzz -s < medion_9580f.keyfuzz
+
+   This assigns the scancode 0x67 to the keycode 155 and so on. For a
+   list of available keycodes have look on the KEY_xxx constant
+   definitions in /usr/include/linux/input.h. The scancodes are keyboard
+   specific. You may use the (console specific) utility showkey(1) to
+   examine the scancode/keycode of a key. Another way to get the
+   scancodes of special keys is to look for kernel debug messages like
+   these if you press the relevant keys:
+atkbd.c: Unknown key pressed (translated set 2, code 0x66 on isa0060/serio0).
+atkbd.c: Unknown key released (translated set 2, code 0x66 on isa0060/serio0).
+
+   Feel free to to send me patch tables for your hardware. I'll add them
+   to my to distribution.
+
+   The keyfuzz distribution includes a SysV init script which runs
+   keyfuzz -s for all configured input devices depending on files or
+   symbolics links named after the devices in /etc/keyfuzz. If you want
+   to use this script, just create a symlink /etc/keyfuzz/event0 to a
+   scancode table file (e.g. /etc/keyfuzz/medion_9580f.keyfuzz). The
+   scancode table of the device /dev/input/event0 is modified according
+   to the contents of that file on each boot:
+cd /etc/keyfuzz
+ln -s medion_9580f.keyfuzz event0
+
+   The virtual file /proc/bus/input/devices lists all available input
+   devices.
+
+Requirements
+
+   keyfuzz requires a kernel supporting the Linux input layer, such as
+   2.6.1.
+
+Installation
+
+   As this package is made with the GNU autotools you should run
+   ./configure inside the distribution directory for configuring the
+   source tree. After that you should run make for compilation and make
+   install (as root) for installation of keyfuzz.
+
+Acknowledgements
+
+   None so far
+
+Download
+
+   The newest release is always available from
+   [16]http://0pointer.de/lennart/projects/keyfuzz/
+
+   The current release is [17]0.2
+
+   Get keyfuzz's development sources from the [18]Subversion
+   [19]repository ([20]viewcvs):
+svn checkout svn://0pointer.de/keyfuzz/trunk keyfuzz
+
+   You may find an up to date Debian package of keyfuzz in my own
+   [21]Debian package repository.
+
+   If you want to be notified whenever I release a new version of this
+   software use the subscription feature of [22]Freshmeat.
+     _________________________________________________________________
+
+
+    Lennart Poettering <mzxrlshmm (at) 0pointer (dot) de>, January 2006
+
+   $Id: README.html.in 14 2006-02-14 16:25:13Z lennart $
+
+References
+
+   1. README#license
+   2. README#news
+   3. README#overview
+   4. README#status
+   5. README#documentation
+   6. README#requirements
+   7. README#installation
+   8. README#acks
+   9. README#download
+  10. http://0pointer.de/lennart/projects/keyfuzz/keyfuzz-0.2.tar.gz
+  11. http://0pointer.de/lennart/projects/keyfuzz/keyfuzz-0.1.tar.gz
+  12. http://0pointer.de/lennart/aldi/
+  13. http://0pointer.de/lennart/tchibo.html
+  14. http://0pointer.de/lennart/projects/keyfuzz/keyfuzz.8.xml
+  15. http://www.tldp.org/
+  16. http://0pointer.de/lennart/projects/keyfuzz/
+  17. http://0pointer.de/lennart/projects/keyfuzz/keyfuzz-0.2.tar.gz
+  18. http://subversion.tigris.org/
+  19. svn://0pointer.de/keyfuzz
+  20. http://0pointer.de/cgi-bin/viewcvs.cgi/?root=keyfuzz
+  21. http://0pointer.de/debian/
+  22. http://freshmeat.net/projects/keyfuzz/

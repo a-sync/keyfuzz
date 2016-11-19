@@ -2,7 +2,7 @@
 <!DOCTYPE manpage SYSTEM "xmltoman.dtd">
 <?xml-stylesheet type="text/xsl" href="xmltoman.xsl" ?>
 
-<!-- $Id$ -->
+<!-- $Id: keyfuzz.8.xml.in 3 2004-01-25 17:23:20Z lennart $ -->
 
 <!-- 
   This file is part of keyfuzz.
