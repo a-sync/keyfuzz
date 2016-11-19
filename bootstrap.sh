@@ -1,5 +1,5 @@
 #!/bin/bash
-# $Id$
+# $Id: bootstrap.sh 12 2006-02-14 16:20:46Z lennart $
 
 # This file is part of keyfuzz.
 #

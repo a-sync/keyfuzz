@@ -1,0 +1,36 @@
+.TH keyfuzz 8 User Manuals
+.SH NAME
+keyfuzz \- Modify keyboard scancode tables of the Linux input layer
+.SH SYNOPSIS
+\fBkeyfuzz [\fIoptions\fB]
+\f1
+.SH DESCRIPTION
+You may use keyfuzz to manipulate the scancode/keycode translation tables of keyboard drivers supporting the Linux input layer API. ("evdev API") 
+.SH OPTIONS
+.TP
+\fB-g | --get\f1
+Dump the current scancode translation table of the device to STDOUT.
+.TP
+\fB-s | --set\f1
+Merge the translation table passed through STDIN into the current translation table of the device.
+.TP
+\fB-i | --info\f1
+Show some information about the specified device.
+.TP
+\fB-d | --device=\f1DEVICE
+Use the specified event device. The virtual file /proc/bus/input/devices lists all input devices available on the local system. (Default: /dev/input/event0)
+.TP
+\fB-v | --vebose\f1
+Enable verbose mode. If used together with \fB--set\f1 all translation tables changes are printed to STDERR.
+.TP
+\fB-h | --help\f1
+Show help
+.TP
+\fB-v | --version\f1
+Show version
+.SH TRANSLATION TABLES
+The scancode/keycode translation tables as read from STDIN or written to STDOUT are formatted as follows: lines beginning with a hashmark and empty lines are ignored. All other lines have to contain a scancode and a keycode number separated by white space. The numbers may be specified either in decimal or in hexadecimal notation. In the latter case, a 0x as to be prepended. You may save the current table by passing \fB--get\f1 to keyfuzz and storing its output in a file. Then, you may restore the table by passing the contents of that file back to keyfuzz with \fB--set\f1.
+.SH AUTHOR
+keyfuzz was written by Lennart Poettering <mzxrlshmm (at) 0pointer (dot) de>. keyfuzz is available at \fBhttp://0pointer.de/lennart/projects/keyfuzz/\f1
+.SH COMMENTS
+This man page was written using \fBxmltoman(1)\f1 by Oliver Kurth.
