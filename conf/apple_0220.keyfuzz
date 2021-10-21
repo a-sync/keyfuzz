@@ -1,8 +1,11 @@
+### keyfuzz file for Apple Aluminium Keyboard
 # move to: /etc/keyfuzz/by-id/usb-Apple__Inc_Apple_Keyboard-event-kbd
 
 # Map F13 to SYSRQ
 0x70068 KEY_SYSRQ
+
 # Map F14 to Scroll Lock
 0x70069 KEY_SCROLLLOCK
+
 # Map F15 to Pause
 0x7006A KEY_PAUSE

@@ -19,7 +19,7 @@
 pkgsysconfdir=$(sysconfdir)/@PACKAGE@
 sysinitdir=@SYSINITDIR@
 
-pkgsysconf_DATA = default.keyfuzz medion_9580f.keyfuzz msi_s270.keyfuzz
+pkgsysconf_DATA = default.keyfuzz medion_9580f.keyfuzz msi_s270.keyfuzz apple_0220.keyfuzz
 noinst_DATA = keyfuzz.init
 
 EXTRA_DIST = $(pkgsysconf_DATA) keyfuzz.init.in
